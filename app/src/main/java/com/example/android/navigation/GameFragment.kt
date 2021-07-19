@@ -23,12 +23,17 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.example.android.navigation.Classes.Question
+//import com.example.android.navigation.Classes.Question
+
 import com.example.android.navigation.databinding.FragmentGameBinding
 
 class GameFragment : Fragment() {
-    data class Question(
-            val text: String,
-            val answers: List<String>)
+
+//    data class Question(
+//        val text: String,
+//        val answers: List<String>)
 
     // The first answer is the correct one.  We randomize the answers before showing the text.
     // All questions must have four answers.  We'd want these to contain references to string
@@ -81,7 +86,7 @@ class GameFragment : Fragment() {
         { view: View ->
             val checkedId = binding.questionRadioGroup.checkedRadioButtonId
             // Do nothing if nothing is checked (id == -1)
-            if (-1 != checkedId) {
+            if (checkedId != -1) {
                 var answerIndex = 0
                 when (checkedId) {
                     R.id.secondAnswerRadioButton -> answerIndex = 1
@@ -99,9 +104,11 @@ class GameFragment : Fragment() {
                         binding.invalidateAll()
                     } else {
                         // We've won!  Navigate to the gameWonFragment.
+                        view.findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
                     }
                 } else {
                     // Game over! A wrong answer sends us to the gameOverFragment.
+                    view.findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment)
                 }
             }
         }
@@ -123,6 +130,7 @@ class GameFragment : Fragment() {
         answers = currentQuestion.answers.toMutableList()
         // and shuffle them
         answers.shuffle()
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_android_trivia_question, questionIndex + 1, numQuestions)
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_android_trivia_question,
+            questionIndex + 1, numQuestions)
     }
 }
